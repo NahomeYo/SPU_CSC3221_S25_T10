@@ -3,16 +3,101 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HTTP Library Project</title>
     <link rel="stylesheet" href="styles.css">
-    <style>
-        body { font-family: Arial, sans-serif; margin: 20px;}
-        button { margin-right: 10px;}
-    </style>
-    <title>HTTP</title>
 </head>
 <body>
-    <div id="heading">
-        <h1>HTTP Library</h1>
+    <div class="container">
+        <h1>HTTP Library </h1>
+        
+                <!-- This is  REQUEST CHOOSE -->
+        <div class="input-group"> 
+            <label for="requestType">Choose HTTP Request:</label>
+            <select id="requestType" onchange="toggleRequestSection()">
+                <option value=""> Select A Request Type </option>
+                <option value="get">GET Request</option>
+                <option value="post">POST Request</option>
+            </select>
+        </div>
+
+
+        <!-- This is GET REQUEST -->
+        <div id="getRequestSection" class="section" style="display: none;">
+            <h2>Get Request</h2>
+            <div class="input-group">
+                <select id="UsersType" onchange="toggleGetInput()">
+                    <option value=""> Select A Request Type </option>
+                    <option value="all">Get All Users</option>
+                    <option value="single">Choose A user</option>
+                </select>
+            </div>
+        
+            <div id="getUserInput" class="input-group" style="display: none;">
+                <label for="getUserId">Enter User ID or Name:</label>
+                <input type="text" id="getUserId" placeholder="Enter ID or Name">
+            </div>
+            <button onclick="sendGetRequest()">Send Get</button>
+        </div>
+        
+
+
+        <!-- This is POST REQUEST -->
+        <div id="postRequestSection" class="section" style="display: none;">
+            <h2>Post Request</h2>
+            <div class="input-group">
+                <input type="text" id="postRoute" value="/users" placeholder="Enter route">
+        </div>
+        <div class="input-group">
+            <label for="postData">Data:</label>
+            <textarea id="postData" rows="4"></textarea>
+        </div>
+        <button onclick="sendPostRequest()">Send Post </button>
     </div>
+
+</div>
+<script>
+    // this will handle a popup for the user Get or Post request WE WILL ADD MORE REQUEST
+    function toggleRequestSection() {
+        const requestType = document.getElementById('requestType').value;
+        const getRequestSection = document.getElementById('getRequestSection');
+        const postRequestSection = document.getElementById('postRequestSection');
+
+        getRequestSection.style.display = 'none';
+        postRequestSection.style.display = 'none';
+
+        if (requestType === 'get') {
+            getRequestSection.style.display = 'block';
+        } else if (requestType === 'post') {
+            postRequestSection.style.display = 'block';
+        }
+    }
+
+
+    // If the user ask to input a single user this will handle it 
+    function toggleGetInput() {
+        const usersType = document.getElementById('UsersType').value;
+        const getUserInput = document.getElementById('getUserInput');
+
+        if (usersType === 'single') {
+            getUserInput.style.display = 'block';
+        } else {
+            getUserInput.style.display = 'none';
+        }
+    }
+    // based on the user inpiut this will send a get request
+    function sendGetRequest() {
+        const usersType = document.getElementById('UsersType').value;
+        const route = '/users';
+        let url = route;
+
+        if (usersType === 'single') {
+            const userId = document.getElementById('getUserId').value.trim();
+            if (userId) {
+                url += `/${userId}`;
+            }
+        }
+    }
+</script>
+
 </body>
 </html>
