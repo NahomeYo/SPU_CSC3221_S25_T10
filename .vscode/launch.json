@@ -5,7 +5,7 @@
             "type": "chrome",
             "request": "launch",
             "name": "Launch Chrome against localhost",
-            "url": "http://localhost:8080", // Replace with your server's port
+            "url": "http://127.0.0.1:5500/HTTP%20Library%20Project/index.html",
             "webRoot": "${workspaceFolder}"
         }
     ]
