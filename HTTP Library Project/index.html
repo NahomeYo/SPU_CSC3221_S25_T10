@@ -8,96 +8,58 @@
 </head>
 <body>
     <div class="container">
-        <h1>HTTP Library </h1>
+        <h1>HTTP Library</h1>
         
-                <!-- This is  REQUEST CHOOSE -->
-        <div class="input-group"> 
-            <label for="requestType">Choose HTTP Request:</label>
-            <select id="requestType" onchange="toggleRequestSection()">
-                <option value=""> Select A Request Type </option>
-                <option value="get">GET Request</option>
-                <option value="post">POST Request</option>
+        <div class="section">
+            <label for="method">HTTP Method:</label>
+            <select id="method" onchange="toggleRequestBody()">
+                <option value="GET">GET</option>
+                <option value="POST">POST</option>
+                <option value="PUT">PUT</option>
+                <option value="DELETE">DELETE</option>
+                <option value="PATCH">PATCH</option>
             </select>
-        </div>
-
-
-        <!-- This is GET REQUEST -->
-        <div id="getRequestSection" class="section" style="display: none;">
-            <h2>Get Request</h2>
-            <div class="input-group">
-                <select id="UsersType" onchange="toggleGetInput()">
-                    <option value=""> Select Request Type </option>
-                    <option value="all">Get all users</option>
-                    <option value="single">Choose a user</option>
-                </select>
+      
+            <label for="endpoint">Endpoint (Ex /users or /users/1):</label>
+            <input type="text" id="endpoint" placeholder="/users" />
+      
+            <label for="query">Query (Ex key=value&...):</label>
+            <input type="text" id="query" placeholder="?name=Leanne Graham" />
+      
+            <div id="bodySection">
+                <label for="body">Request (JSON):</label>
+                <textarea id="body" rows="7" placeholder='
+                 {
+                    "name": "Leanne Graham",
+                    "username": "Bret",
+                    "email": "Sincere@april.biz",
+                    "phone": "1-770-736-8031 x56442"
+                  }
+                  '></textarea>
             </div>
-        
-            <div id="getUserInput" class="input-group" style="display: none;">
-                <label for="getUserId">Enter User ID or Name:</label>
-                <input type="text" id="getUserId" placeholder="Enter ID or Name">
-            </div>
-            <button onclick="sendGetRequest()">Send Get</button>
-        </div>
-        
+      
 
-
-        <!-- This is POST REQUEST -->
-        <div id="postRequestSection" class="section" style="display: none;">
-            <h2>Post Request</h2>
-            <div class="input-group">
-                <input type="text" id="postRoute" placeholder="Enter route">
+            
+            <button id="send-btn">Send Request</button>
         </div>
-        <div class="input-group">
-            <label for="postData">Data:</label>
-            <textarea id="postData" rows="4"></textarea>
+      
+        <div class="section">
+            <h2>Response</h2>
+            <pre id="response"></pre>
         </div>
-        <button onclick="sendPostRequest()">Send Post </button>
     </div>
 
-</div>
-<script>
-    // this will handle a popup for the user Get or Post request WE WILL ADD MORE REQUEST
-    function toggleRequestSection() {
-        const requestType = document.getElementById('requestType').value;
-        const getRequestSection = document.getElementById('getRequestSection');
-        const postRequestSection = document.getElementById('postRequestSection');
-
-        getRequestSection.style.display = 'none';
-        postRequestSection.style.display = 'none';
-
-        if (requestType === 'get') {
-            getRequestSection.style.display = 'block';
-        } else if (requestType === 'post') {
-            postRequestSection.style.display = 'block';
-        }
-    }
-
-
-    // If the user ask to input a single user this will handle it 
-    function toggleGetInput() {
-        const usersType = document.getElementById('UsersType').value;
-        const getUserInput = document.getElementById('getUserInput');
-
-        if (usersType === 'single') {
-            getUserInput.style.display = 'block';
-        } else {
-            getUserInput.style.display = 'none';
-        }
-    }
-    // based on the user inpiut this will send a get request
-    function sendGetRequest() {
-        const usersType = document.getElementById('UsersType').value;
-        const route = '/users';
-        let url = route;
-
-        if (usersType === 'single') {
-            const userId = document.getElementById('getUserId').value.trim();
-            if (userId) {
-                url += `/${userId}`;
+    <script>
+        function toggleRequestBody() {
+            const method = document.getElementById('method').value;
+            const bodySection = document.getElementById('bodySection');
+            if (method === 'POST' || method === 'PUT' || method === 'PATCH') {
+                bodySection.style.display = 'block';
+            } else {
+                bodySection.style.display = 'none';
             }
         }
-    }
-</script>
-
+        window.onload = toggleRequestBody;
+    </script>
 </body>
 </html>
