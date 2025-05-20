@@ -1,15 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>HTTP Library Project</title>
     <link rel="stylesheet" href="styles.css">
 </head>
+
 <body>
     <div class="container">
         <h1>HTTP Library</h1>
-        
+
         <div class="section">
             <label for="method">HTTP Method:</label>
             <select id="method" onchange="toggleRequestBody()">
@@ -19,13 +21,13 @@
                 <option value="DELETE">DELETE</option>
                 <option value="PATCH">PATCH</option>
             </select>
-      
+
             <label for="endpoint">Endpoint (Ex /users or /users/1):</label>
             <input type="text" id="endpoint" placeholder="/users" />
-      
+
             <label for="query">Query (Ex key=value&...):</label>
             <input type="text" id="query" placeholder="?name=Leanne Graham" />
-      
+
             <div id="bodySection">
                 <label for="body">Request (JSON):</label>
                 <textarea id="body" rows="7" placeholder='
@@ -37,18 +39,19 @@
                   }
                   '></textarea>
             </div>
-      
 
-            
+
+
             <button id="send-btn">Send Request</button>
         </div>
-      
+
         <div class="section">
             <h2>Response</h2>
             <pre id="response"></pre>
         </div>
     </div>
 
+    <script src="./httpRequest.js"></script>
     <script>
         function toggleRequestBody() {
             const method = document.getElementById('method').value;
@@ -62,4 +65,5 @@
         window.onload = toggleRequestBody;
     </script>
 </body>
+
 </html>
