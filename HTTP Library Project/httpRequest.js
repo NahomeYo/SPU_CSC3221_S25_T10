@@ -60,9 +60,10 @@ class HTTPRequest {
     }
   }
 
+  
 // ==============================================
 // SECTION: INITIALIZATION AND EVENT BINDING
-// Connects the library to the UI (unchanged from original).
+// Connects the library to the UI.
 // ==============================================
   const api = new HTTPRequest("https://jsonplaceholder.typicode.com");
   document.getElementById("send-btn").addEventListener("click", async (e) => {
