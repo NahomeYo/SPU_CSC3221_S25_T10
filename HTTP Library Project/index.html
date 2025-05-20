@@ -12,6 +12,10 @@
     <div class="container">
         <h1>HTTP Library</h1>
 
+     <!-- ==============================================
+             SECTION: REQUEST CONFIGURATION
+             Contains controls for building HTTP requests
+             ============================================== -->
         <div class="section">
             <label for="method">HTTP Method:</label>
             <select id="method" onchange="toggleRequestBody()">
@@ -22,29 +26,40 @@
                 <option value="PATCH">PATCH</option>
             </select>
 
+            <!-- API Endpoint Input -->
             <label for="endpoint">Endpoint (Ex /users or /users/1):</label>
             <input type="text" id="endpoint" placeholder="/users" />
 
+            <!-- Query Parameters Input -->
             <label for="query">Query (Ex key=value&...):</label>
             <input type="text" id="query" placeholder="?name=Leanne Graham" />
 
+            <!-- Request Body Section (Conditionally Visible) -->
             <div id="bodySection">
                 <label for="body">Request (JSON):</label>
                 <textarea id="body" rows="7" placeholder='
-                 {
+               Single input 
+                {
+                    "name": "Leanne Graham"
+                }
+                
+              Multiple Input 
+                {
                     "name": "Leanne Graham",
-                    "username": "Bret",
-                    "email": "Sincere@april.biz",
-                    "phone": "1-770-736-8031 x56442"
+                    "email": "Sincere@april.biz"
+            
                   }
                   '></textarea>
             </div>
 
-
-
+            <!-- Request Submission Button -->
             <button id="send-btn">Send Request</button>
         </div>
 
+  <!-- ==============================================
+             SECTION: RESPONSE DISPLAY
+             Shows formatted API responses
+             ============================================== -->
         <div class="section">
             <h2>Response</h2>
             <pre id="response"></pre>
@@ -53,6 +68,11 @@
 
     <script src="./httpRequest.js"></script>
     <script>
+        /**
+         * Toggles visibility of the request body textarea
+         * based on selected HTTP method
+         */
+
         function toggleRequestBody() {
             const method = document.getElementById('method').value;
             const bodySection = document.getElementById('bodySection');
