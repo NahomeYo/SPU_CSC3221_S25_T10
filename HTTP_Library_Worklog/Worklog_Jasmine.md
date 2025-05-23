@@ -1,1 +1,1 @@
-
+I worked on the HTML part of this project creating the foundation for the style.css to build from. I also helped Dawit come up with better design and navigation layouts for the UI to help declutter and simplify it for the user to successfuly use without confusion.
