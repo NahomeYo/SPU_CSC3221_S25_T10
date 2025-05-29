@@ -8,8 +8,7 @@ body {
     min-height: 100vh;
     
   }
-  
-  
+
   .container {
     max-width: 600px;
     width: 100%;
@@ -76,5 +75,36 @@ body {
     white-space: pre-wrap;
     overflow-x: auto;
     text-align: left;
+  }
+
+  #response {
+    background-color: #f4f4f4;
+    padding: 10px;
+    border-radius: 8ex;
+    border: 1px solid #ccc;
+    white-space: pre-wrap;
+    font-family: monospace;
+    margin-top: 10px;
+  }
+
+  .success {
+    background-color: #21de56;
+    border-left: 5px solid #4abc4e;
+    color: #2e7d32;
+  }
+
+  .error {
+    background-color: #d63333;
+    border-left: 5px solid #c81d1d;
+    color: #911313;
+  }
+  
+  textarea {
+    vertical-align: top;
+    padding: 8px;
+    resize: vertical;
+    overflow: auto;
+    text-align: left;
+    vertical-align: top;
   }
   
