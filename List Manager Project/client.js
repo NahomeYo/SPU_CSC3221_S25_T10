@@ -55,8 +55,8 @@ class Client {
         } catch (error) {
 
             return {
-                error: "API Request Failed",
-                message: error.message,
+                error: "API Request Failed.",
+                message: "Make sure to RUN cd 'List Manager Project' and also RUN node server.js",
             };
         }
     }
