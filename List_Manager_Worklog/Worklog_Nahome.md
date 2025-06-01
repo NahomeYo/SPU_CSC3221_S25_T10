@@ -1,0 +1,2 @@
+Name: Nahome Yohannes
+I have updated the previous "httprequest.js" sheet to handle JavaScript requests and utilize a local API. Another requirement was to update the base URL and incorporate error handling when the request fails. Additionally, the POST/ADD function will no longer require an ID from the server. Instead, the server.js will automatically generate IDs for proper layout and to prevent duplicates. Also, process the data and send it to the server
