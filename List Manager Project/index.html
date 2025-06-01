@@ -64,23 +64,25 @@
          * based on selected HTTP method
          */
 
-        function toggleRequestBody() {
-            const method = document.getElementById('method').value;
-            const bodySection = document.getElementById('bodySection');
-            if (method === 'POST' || method === 'PUT' || method === 'PATCH') {
-                bodySection.style.display = 'block';
-            } else {
-                bodySection.style.display = 'none';
-            }
-            // lock endpoint to users no ID allowed //
-            if (method === 'POST') {
-                endpointInput.value = '/users';
-                endpointInput.disabled = false;
-            }
-            else {
-                endpointInput.disabled = false;
-            }
-        }
+         function toggleRequestBody() {
+    const method = document.getElementById('method').value;
+    const bodySection = document.getElementById('bodySection');
+    const endpointInput = document.getElementById('endpoint'); // Add this line
+    
+    if (method === 'POST' || method === 'PUT' || method === 'PATCH') {
+        bodySection.style.display = 'block';
+    } else {
+        bodySection.style.display = 'none';
+    }
+    
+    // lock endpoint to users no ID allowed //
+    if (method === 'POST') {
+        endpointInput.value = '/users';
+        endpointInput.disabled = true; 
+    } else {
+        endpointInput.disabled = false;
+    }
+}
 
         function showMessage(msg, isSuccess = true) {
             const respondBox = document.getElementById('Response');
