@@ -56,8 +56,10 @@ class Client {
 
             return {
                 error: "API Request Failed.",
-                message: "Make sure to RUN cd 'List Manager Project' and also RUN node server.js",
+                message: `${error.message} — Hint: Make sure the server is running and the endpoint is correct.`,
+
             };
+            
         }
     }
 }

@@ -9,7 +9,7 @@ app.use(express.json());
 
 const DATA_FILE = "data.json";
 
-// STRICT FORMATTING FUNCTION
+// For correct property order in responses
 function formatUser(user) {
   if (!user || typeof user !== 'object') return user;
   
@@ -19,7 +19,7 @@ function formatUser(user) {
   if (user.name) formatted.name = user.name;
   if (user.username) formatted.username = user.username;
   if (user.email) formatted.email = user.email;
-  // Add other properties here in your preferred order
+  
   
   return formatted;
 }
@@ -72,7 +72,59 @@ app.post("/users", (req, res) => {
   writeData(users);
   res.status(201).json(newUser);
 });
+// PUT: Replace user entirely
+app.put("/users/:id", (req, res) => {
+  const id = parseInt(req.params.id);
+  const users = readData();
+  const index = users.findIndex(u => u.id === id);
+
+  if (index === -1) {
+    return res.status(404).json({ error: "User not found" });
+  }
+
+  const updatedUser = formatUser({ id, ...req.body });
+  users[index] = updatedUser;
+  writeData(users);
+  res.json(updatedUser);
+});
+
+// PATCH: Update part of a user
+app.patch("/users/:id", (req, res) => {
+  const id = parseInt(req.params.id);
+  const users = readData();
+  const user = users.find(u => u.id === id);
+
+  if (!user) {
+    return res.status(404).json({ error: "User not found" });
+  }
+
+  Object.assign(user, req.body);
+  writeData(users);
+  res.json(user);
+});
+
+// DELETE: Remove user
+app.delete("/users/:id", (req, res) => {
+  const id = parseInt(req.params.id);
+  let users = readData();
+  console.log("Before deletion:", users); // Debugging
+
+  const initialLength = users.length;
+  users = users.filter(u => u.id !== id);
+
+  if (users.length === initialLength) {
+      return res.status(404).json({ error: "User not found" });
+  }
+
+  writeData(users);
+  console.log("After deletion:", users); // Debugging
+
+  res.json({ message: `User ${id} deleted` });
+});
+
+
+
 
 // Start server with clean data file if needed
 if (!fs.existsSync(DATA_FILE)) writeData([]);
-app.listen(PORT, () => console.log(`✅ Server running on http://localhost:${PORT}`));
+app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));
