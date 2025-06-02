@@ -7,12 +7,12 @@ Built a Node.js/Express server (server.js) to manage user data.
 
 
 Challenges I Faced:
-🔧 Had to debug CORS issues between frontend/backend
-🔧 Solved the "ID appearing last in JSON" problem
-🔧 Made DELETE and PATCH routes work reliably
+ - Had to debug CORS issues between frontend/backend
+ - Solved the "ID appearing last in JSON" problem
+ - Made DELETE and PATCH routes work reliably(was not working becuase of diffrent localhost)
 
 How I Solved Them:
-🔨 Used middleware to format responses consistently
-🔨 Added proper CORS settings for local development
-🔨 Tested each endpoint step-by-step
+ - Used middleware to format responses 
+ - Added proper CORS settings for local development
+ - Tested each endpoint step-by-step and connect host
 
