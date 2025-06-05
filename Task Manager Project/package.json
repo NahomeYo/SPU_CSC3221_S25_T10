@@ -1,0 +1,25 @@
+{
+  "name": "spu_csc3221_s25_t10",
+  "version": "1.0.0",
+  "description": "- Jasmine Madora-Rivas - Dawit Kelile - Nahome Yohannes",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/NahomeYo/SPU_CSC3221_S25_T10.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/NahomeYo/SPU_CSC3221_S25_T10/issues"
+  },
+  "homepage": "https://github.com/NahomeYo/SPU_CSC3221_S25_T10#readme",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^5.1.0",
+    "mongoose": "^8.15.1"
+  }
+}

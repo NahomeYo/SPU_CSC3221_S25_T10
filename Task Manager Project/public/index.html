@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>List Management Project</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <div class="container">
+        <h1>List Managment Project</h1>
+
+     <!-- ==============================================
+             SECTION: REQUEST CONFIGURATION
+             Contains controls for building HTTP requests
+             ============================================== -->
+        <div class="section">
+            <label for="method">List Method:</label>
+            <select id="method" onchange="toggleRequestBody()">
+                <option value="GET">READ</option>
+                <option value="POST">ADD</option>
+                <option value="PUT">PUT</option>
+                <option value="DELETE">DELETE</option>
+                <option value="PATCH">PATCH</option>
+            </select>
+
+            <!-- API Endpoint Input -->
+            <label for="endpoint">Endpoint (Ex /users or /users/1):</label>
+            <input type="text" id="endpoint" placeholder="/users" />
+
+            <!-- Query Parameters Input -->
+            <label for="query">Query (Ex key=value&...):</label>
+            <input type="text" id="query" placeholder="?name=Leanne Graham" />
+
+            <!-- Request Body Section (Conditionally Visible) -->
+            <div id="bodySection">
+                <label for="body">Request (JSON):</label>
+                <textarea id="body" rows="4" placeholder='{
+    "name": "Leanne Graham",
+    "email": "Sincere@april.biz"
+}'></textarea>
+            </div>
+
+            <!-- Request Submission Button -->
+            <button id="send-btn">Send Request</button>
+        </div>
+
+  <!-- ==============================================
+             SECTION: RESPONSE DISPLAY
+             Shows formatted API responses
+             ============================================== -->
+        <div class="section">
+            <h2>Response</h2>
+            <pre id="response"></pre>
+        </div>
+    </div>
+
+    <script src="./client.js"></script>
+    <script>
+        /**
+         * Toggles visibility of the request body textarea
+         * based on selected HTTP method
+         */
+
+         function toggleRequestBody() {
+    const method = document.getElementById('method').value;
+    const bodySection = document.getElementById('bodySection');
+    const endpointInput = document.getElementById('endpoint'); // Add this line
+    
+    if (method === 'POST' || method === 'PUT' || method === 'PATCH') {
+        bodySection.style.display = 'block';
+    } else {
+        bodySection.style.display = 'none';
+    }
+    
+    // lock endpoint to users no ID allowed //
+    if (method === 'POST') {
+        endpointInput.value = '/users';
+        endpointInput.disabled = true; 
+    } else {
+        endpointInput.disabled = false;
+    }
+}
+/*
+        function showMessage(msg, isSuccess = true) {
+            const respondBox = document.getElementById('Response');
+            respondBox.textContent = msg;
+            respondBox.style.color = isSuccess ? 'Green' : 'Red';
+        }
+            */
+           
+        window.onload = toggleRequestBody;
+    </script>
+</body>
+
+</html>
