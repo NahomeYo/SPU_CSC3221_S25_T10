@@ -2,14 +2,18 @@ class Client {
     constructor(baseUrl) {
         this.baseUrl = baseUrl;
     }
- 
-    async request(method, endpoint, query = "", body = null) { // body will come from description textarea
+ /*
+    Ensure endpoint starts with a slash and also the body will come from description textarea
+    Make sure it forms a valid URL for the API Endpoint.
+    IF the ID or the tasks is not provided, it will default to the tasks endpoint.
+    This function handles all HTTP methods (GET, POST, PUT, PATCH, DELETE) and allows for query parameters.
+ */
+    async request(method, endpoint, query = "", body = null) { 
         try {
-            // Ensure endpoint starts with a slash
+        
             endpoint = endpoint.startsWith("/") ? endpoint : `/${endpoint}`;
-            const expectedEndpointPrefix = "/tasks"; // Define this once
+            const expectedEndpointPrefix = "/tasks";
  
-            // Add /tasks prefix if it's just an ID or a direct "tasks" input for specific methods
             if (!endpoint.startsWith(expectedEndpointPrefix) && (endpoint.length === 24 || endpoint === "tasks")) {
                 endpoint = `${expectedEndpointPrefix}/${endpoint}`;
             } else if (!endpoint.startsWith(expectedEndpointPrefix) && endpoint.length > 0) {
@@ -27,11 +31,10 @@ class Client {
                 },
             };
  
-            // Declare parsedBody here, outside the conditional block
-            let parsedBody = null; // Initialize to null
- 
+            // Declare parsedBody
+            let parsedBody = null;
             if (["POST", "PUT"].includes(method)) {
-                if (body && body.trim()) { // Only try to parse if body content exists
+                if (body && body.trim()) { 
                     try {
                         parsedBody = JSON.parse(body);
                     } catch (e) {
@@ -57,19 +60,13 @@ class Client {
                 }
             }
  
-            // The PATCH check should align with your server's PUT logic if you use PUT
-            // Your server has app.put('/tasks/:id', ...)
-            // So if your HTML sends PUT, this block won't run as it's checking for PATCH
-            // If you want to use the 'PATCH' method and its checks:
-            // 1. Change <option value="PUT">UPDATE</option> to <option value="PATCH">UPDATE</option> in index.html
-            // 2. Change app.put('/tasks/:id') to app.patch('/tasks/:id') in server.js
-            // For now, I'm keeping the check as PATCH, but note the mismatch.
             if (method === "PATCH" && !endpoint.startsWith(expectedEndpointPrefix + "/")) {
                 throw new Error(`PATCH requires a specific task ID (e.g., ${expectedEndpointPrefix}/<ID>)`);
             }
- 
-            console.log(`Sending ${method} request to: ${url}`); // Debugging line
-            console.log('Request options:', options); // Debugging line
+            
+            // This is for the debugging purpose. I might remove it later. Nahome
+            console.log(`Sending ${method} request to: ${url}`); 
+            console.log('Request options:', options); 
  
  
             const response = await fetch(url, options);
@@ -90,7 +87,7 @@ class Client {
             console.error("API Request Failed:", error);
             return {
                 error: "API Request Failed.",
-                message: `${error.message} â€” Hint: Make sure the server is running, the endpoint is correct (e.g., /tasks or /tasks/ID), and check your request body format.`,
+                message: `${error.message} Hint: Make sure the server is running, the endpoint is correct (e.g., /tasks or /tasks/ID), and check request body format.`,
             };
         }
     }
@@ -117,6 +114,8 @@ function toggleRequestBody() {
  
     bodySection.style.display = ["POST", "PUT"].includes(method) ? "block" : "none";
  
+    // They are not doing the same thing, but same function is used to toggle the request body
+    // This is to ensure the endpoint input is set correctly based on the method
     if (method === "POST") {
         endpointInput.value = "/tasks";
         endpointInput.disabled = true;

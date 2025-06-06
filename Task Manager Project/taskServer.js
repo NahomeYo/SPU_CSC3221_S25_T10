@@ -6,212 +6,119 @@ const cors = require('cors');
 const app = express();
 const port = 3000;
  
-// MongoDB connection
-mongoose.connect('mongodb+srv://Team10:1234@cluster0.pdc2xzl.mongodb.net/TM-T10?retryWrites=true&w=majority', {
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-})
+// MongoDB connection 
+mongoose.connect('mongodb+srv://Team10:1234@cluster0.pdc2xzl.mongodb.net/TM-T10?retryWrites=true&w=majority',)
+// This will be error handling for the connection/mongoose
 .then(() => console.log('Connected to MongoDB Atlas'))
 .catch(err => console.error('MongoDB connection error:', err));
  
 // Middleware
-app.use(cors());
-app.use(express.json());
-app.use(express.static(path.join(__dirname, 'public')));
+/*
+    I am enabling the CORS for all routes to allow cross-origin requests
+    This will parse incoming JSON requests
+    This static is to connect to public folder and helping it run HTML,CSS and client JS files
+*/
+app.use(cors()); 
+app.use(express.json()); 
+app.use(express.static(path.join(__dirname, 'public'))); 
  
 // Mongoose model
 const Task = require('./models/task');
  
-// Routes
  
-// GET all tasks
 app.get("/tasks", async (req, res) => {
     try {
-        const tasks = await Task.find().sort({ createdAt: -1 }); // Sort by newest first
-        res.json({
-            success: true,
-            count: tasks.length,
-            data: tasks
-        });
+        const tasks = await Task.find()
+            .sort({ createdAt: -1 })
+            .select("-__v -createdAt -updatedAt")
+            .lean();
+        res.json(tasks); // return raw array
     } catch (err) {
-        console.error("Error fetching tasks:", err);
-        res.status(500).json({
-            success: false,
-            error: "Failed to fetch tasks",
-            message: err.message
-        });
+        res.status(500).json({ error: err.message });
     }
-});
- 
-// GET specific task by ID
-app.get("/tasks/:id", async (req, res) => {
+});app.get("/tasks/:id", async (req, res) => {
     try {
-        // Validate the ID format first
         if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
-            return res.status(400).json({
-                success: false,
-                error: "Invalid task ID format",
-                message: "Task ID must be a valid MongoDB ObjectId (24 character hex string)"
-            });
+            return res.status(400).json({ error: "Invalid task ID format" });
         }
- 
-        const task = await Task.findById(req.params.id);
+
+        const task = await Task.findById(req.params.id)
+            .select("-__v -createdAt -updatedAt")
+            .lean();
+
         if (!task) {
-            return res.status(404).json({
-                success: false,
-                error: "Task not found",
-                message: `No task found with ID: ${req.params.id}`
-            });
+            return res.status(404).json({ error: "Task not found" });
         }
-        
-        res.json({
-            success: true,
-            data: task
-        });
+
+        res.json(task); // return raw task object
     } catch (err) {
-        console.error("Error fetching task:", err);
-        res.status(500).json({
-            success: false,
-            error: "Failed to fetch task",
-            message: err.message
-        });
+        res.status(500).json({ error: err.message });
     }
-});
- 
-// POST - Create new task
-app.post('/tasks', async (req, res) => {
+});app.post("/tasks", async (req, res) => {
     try {
-        // Handle both JSON objects and simple strings
-        let taskData;
-        if (typeof req.body === 'string') {
-            taskData = { title: req.body };
-        } else {
-            taskData = req.body;
+        let taskData = typeof req.body === "string" ? { title: req.body } : req.body;
+
+        if (!taskData.title || taskData.title.trim() === "") {
+            return res.status(400).json({ error: "Task title is required" });
         }
- 
-        // Validate required fields
-        if (!taskData.title || taskData.title.trim() === '') {
-            return res.status(400).json({
-                success: false,
-                error: 'Validation failed',
-                message: 'Task title is required'
-            });
-        }
- 
+
         const task = new Task(taskData);
         const savedTask = await task.save();
-        
-        res.status(201).json({
-            success: true,
-            message: 'Task created successfully',
-            data: savedTask
-        });
+        const cleanTask = savedTask.toObject();
+      
+
+        res.status(201).json(cleanTask); // return raw task
     } catch (error) {
-        console.error("Error creating task:", error);
-        res.status(400).json({
-            success: false,
-            error: 'Failed to create task',
-            message: error.message
-        });
+        res.status(400).json({ error: error.message });
     }
-});
- 
-// PUT - Update task by ID
-app.put('/tasks/:id', async (req, res) => {
+});app.put("/tasks/:id", async (req, res) => {
     try {
-        // Validate the ID format first
         if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
-            return res.status(400).json({
-                success: false,
-                error: "Invalid task ID format",
-                message: "Task ID must be a valid MongoDB ObjectId"
-            });
+            return res.status(400).json({ error: "Invalid task ID format" });
         }
- 
+
         const updates = req.body;
- 
-        // Allow ?completed=true as a query override
+
         if (req.query.completed !== undefined) {
             updates.completed = req.query.completed === "true";
         }
- 
-        const task = await Task.findByIdAndUpdate(
-            req.params.id,
-            updates,
-            { new: true, runValidators: true }
-        );
-        
+
+        const task = await Task.findByIdAndUpdate(req.params.id, updates, {
+            new: true,
+            runValidators: true,
+        })
+            .select("-__v -createdAt -updatedAt")
+            .lean();
+
         if (!task) {
-            return res.status(404).json({
-                success: false,
-                error: "Task not found",
-                message: `No task found with ID: ${req.params.id}`
-            });
+            return res.status(404).json({ error: "Task not found" });
         }
-        
-        res.json({
-            success: true,
-            message: 'Task updated successfully',
-            data: task
-        });
+
+        res.json(task); // return raw updated task
     } catch (error) {
-        console.error("Error updating task:", error);
-        res.status(400).json({
-            success: false,
-            error: 'Failed to update task',
-            message: error.message
-        });
+        res.status(400).json({ error: error.message });
     }
-});
- 
-// DELETE - Delete task by ID
-app.delete('/tasks/:id', async (req, res) => {
+});app.delete("/tasks/:id", async (req, res) => {
     try {
-        // Validate the ID format first
         if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
-            return res.status(400).json({
-                success: false,
-                error: "Invalid task ID format",
-                message: "Task ID must be a valid MongoDB ObjectId"
-            });
+            return res.status(400).json({ error: "Invalid task ID format" });
         }
- 
-        const task = await Task.findByIdAndDelete(req.params.id);
-        
+
+        const task = await Task.findByIdAndDelete(req.params.id)
+            .select("-__v -createdAt -updatedAt")
+            .lean();
+
         if (!task) {
-            return res.status(404).json({
-                success: false,
-                error: "Task not found",
-                message: `No task found with ID: ${req.params.id}`
-            });
+            return res.status(404).json({ error: "Task not found" });
         }
-        
-        res.json({
-            success: true,
-            message: "Task deleted successfully",
-            data: task
-        });
+
+        res.json(task); // return raw deleted task
     } catch (error) {
-        console.error("Error deleting task:", error);
-        res.status(500).json({
-            success: false,
-            error: 'Failed to delete task',
-            message: error.message
-        });
+        res.status(500).json({ error: error.message });
     }
 });
  
-// Health check endpoint
-app.get('/health', (req, res) => {
-    res.json({
-        success: true,
-        message: 'Server is running',
-        timestamp: new Date().toISOString()
-    });
-});
- 
-// Start server
+// This will start the server
 app.listen(port, () => {
     console.log(`Server running on http://localhost:${port}`);
-    console.log(`Health check: http://localhost:${port}/health`);
 });

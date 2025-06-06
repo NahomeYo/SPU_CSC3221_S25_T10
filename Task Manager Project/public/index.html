@@ -10,7 +10,7 @@
     <div class="container">
         <h1>Task Manager Project</h1>
 
-        <!-- SECTION: Request Configuration -->
+       
         <div class="section">
             <label for="method">Request Method:</label>
             <select id="method" onchange="toggleRequestBody()">
@@ -20,18 +20,17 @@
                 <option value="DELETE">DELETE</option>
             </select>
 
-            <!-- Endpoint -->
-            <label for="endpoint">Endpoint (e.g., /tasks or /tasks/123):</label>
+            <!-- This is how the Endpoint looks for ID -->
+            <label for="endpoint">Endpoint (e.g., /tasks or /tasks/ID):</label>
             <input type="text" id="endpoint" placeholder="/tasks" />
 
-            <!-- Request Body -->
+            <!-- This will be the request Body -->
             <div id="bodySection">
-                <label for="description">Task Data (JSON or just title):</label>
+                <label for="description">Task Data:</label>
                 <textarea id="description" rows="4" placeholder='{
   "title": "Task Title",
   "completed": false
 }'></textarea>
-                <small>Or just type the task title</small>
             </div>
 
             <!-- Send -->

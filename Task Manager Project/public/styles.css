@@ -1,7 +1,7 @@
 body {
   margin: 0;
   font-family: Arial, sans-serif;
-  background: #f0f4ff;
+  background: linear-gradient(0deg,rgba(136, 199, 209, 1) 0%, rgba(255, 255, 255, 1) 100%);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -17,12 +17,12 @@ body {
 
 h1 {
   font-size: 2rem;
-  color: #004aad;
+  color: #6d87a9;
   margin-bottom: 20px;
 }
 
 h2, h3 {
-  color: #004aad;
+  color: #6d87a9;
   margin-bottom: 15px;
 }
 
@@ -39,6 +39,7 @@ label {
   font-weight: bold;
   margin-bottom: 5px;
   text-align: left;
+  color: #6d87a9;
 }
 
 input,
@@ -67,7 +68,7 @@ small {
 button,
 #send-btn {
   padding: 10px 20px;
-  background: #007bff;
+  background: #3e5677;
   color: white;
   border: none;
   border-radius: 6px;
@@ -150,3 +151,8 @@ textarea {
       padding: 8px 16px;
   }
 }
+
+#endpoint {
+  background: rgb(255, 255, 255);
+}
+
