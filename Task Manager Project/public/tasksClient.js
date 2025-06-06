@@ -2,21 +2,34 @@ class Client {
     constructor(baseUrl) {
         this.baseUrl = baseUrl;
     }
+<<<<<<< HEAD
  
+=======
+
+>>>>>>> 0202dce37193ab38a236ba377d87f3e4a7b7d170
     async request(method, endpoint, query = "", body = null) { // body will come from description textarea
         try {
             // Ensure endpoint starts with a slash
             endpoint = endpoint.startsWith("/") ? endpoint : `/${endpoint}`;
             const expectedEndpointPrefix = "/tasks"; // Define this once
+<<<<<<< HEAD
  
+=======
+
+>>>>>>> 0202dce37193ab38a236ba377d87f3e4a7b7d170
             // Add /tasks prefix if it's just an ID or a direct "tasks" input for specific methods
             if (!endpoint.startsWith(expectedEndpointPrefix) && (endpoint.length === 24 || endpoint === "tasks")) {
                 endpoint = `${expectedEndpointPrefix}/${endpoint}`;
             } else if (!endpoint.startsWith(expectedEndpointPrefix) && endpoint.length > 0) {
                 endpoint = `${expectedEndpointPrefix}/${endpoint}`;
             }
+<<<<<<< HEAD
  
  
+=======
+
+
+>>>>>>> 0202dce37193ab38a236ba377d87f3e4a7b7d170
             query = query && !query.startsWith("?") ? `?${query}` : query;
             const url = `${this.baseUrl}${endpoint}${query}`;
  
@@ -26,10 +39,17 @@ class Client {
                     "Content-Type": "application/json"
                 },
             };
+<<<<<<< HEAD
  
             // Declare parsedBody here, outside the conditional block
             let parsedBody = null; // Initialize to null
  
+=======
+
+            // Declare parsedBody here, outside the conditional block
+            let parsedBody = null; // Initialize to null
+
+>>>>>>> 0202dce37193ab38a236ba377d87f3e4a7b7d170
             if (["POST", "PUT"].includes(method)) {
                 if (body && body.trim()) { // Only try to parse if body content exists
                     try {
@@ -42,6 +62,7 @@ class Client {
                 } else if (method === "POST") {
                     // For POST, body is usually required unless you have a default on server
                     throw new Error("POST request requires a non-empty body.");
+<<<<<<< HEAD
                 }
                 // If it's a PUT with an empty body but a query, that's handled correctly later.
             }
@@ -52,11 +73,27 @@ class Client {
                     throw new Error(`POST requires the tasks endpoint (e.g., ${expectedEndpointPrefix})`);
                 }
  
+=======
+                }
+                // If it's a PUT with an empty body but a query, that's handled correctly later.
+            }
+
+            // Now parsedBody is guaranteed to be declared (even if null) when accessed here
+            if (method === "POST") {
+                if (endpoint !== expectedEndpointPrefix) {
+                    throw new Error(`POST requires the tasks endpoint (e.g., ${expectedEndpointPrefix})`);
+                }
+
+>>>>>>> 0202dce37193ab38a236ba377d87f3e4a7b7d170
                 if (parsedBody && parsedBody.id) { // This check now works correctly
                     throw new Error("POST no longer needs ID, remove it. Server will handle it");
                 }
             }
+<<<<<<< HEAD
  
+=======
+
+>>>>>>> 0202dce37193ab38a236ba377d87f3e4a7b7d170
             // The PATCH check should align with your server's PUT logic if you use PUT
             // Your server has app.put('/tasks/:id', ...)
             // So if your HTML sends PUT, this block won't run as it's checking for PATCH
@@ -67,11 +104,19 @@ class Client {
             if (method === "PATCH" && !endpoint.startsWith(expectedEndpointPrefix + "/")) {
                 throw new Error(`PATCH requires a specific task ID (e.g., ${expectedEndpointPrefix}/<ID>)`);
             }
+<<<<<<< HEAD
  
             console.log(`Sending ${method} request to: ${url}`); // Debugging line
             console.log('Request options:', options); // Debugging line
  
  
+=======
+
+            console.log(`Sending ${method} request to: ${url}`); // Debugging line
+            console.log('Request options:', options); // Debugging line
+
+
+>>>>>>> 0202dce37193ab38a236ba377d87f3e4a7b7d170
             const response = await fetch(url, options);
  
             if (response.status === 404) {
@@ -90,14 +135,24 @@ class Client {
             console.error("API Request Failed:", error);
             return {
                 error: "API Request Failed.",
+<<<<<<< HEAD
                 message: `${error.message} â€” Hint: Make sure the server is running, the endpoint is correct (e.g., /tasks or /tasks/ID), and check your request body format.`,
+=======
+                message: `${error.message} — Hint: Make sure the server is running, the endpoint is correct (e.g., /tasks or /tasks/ID), and check your request body format.`,
+>>>>>>> 0202dce37193ab38a236ba377d87f3e4a7b7d170
             };
         }
     }
 }
+<<<<<<< HEAD
  
 const api = new Client("http://localhost:3000");
  
+=======
+
+const api = new Client("http://localhost:3000");
+
+>>>>>>> 0202dce37193ab38a236ba377d87f3e4a7b7d170
 document.getElementById("send-btn").addEventListener("click", async (e) => {
     e.preventDefault();
     const method = document.getElementById("method").value;
@@ -108,15 +163,25 @@ document.getElementById("send-btn").addEventListener("click", async (e) => {
     const result = await api.request(method, endpoint, query, body);
     document.getElementById("response").textContent = JSON.stringify(result, null, 2);
 });
+<<<<<<< HEAD
  
+=======
+
+>>>>>>> 0202dce37193ab38a236ba377d87f3e4a7b7d170
 function toggleRequestBody() {
     const method = document.getElementById("method").value;
     const bodySection = document.getElementById("bodySection");
     const endpointInput = document.getElementById("endpoint");
     const descriptionTextarea = document.getElementById("description");
+<<<<<<< HEAD
  
     bodySection.style.display = ["POST", "PUT"].includes(method) ? "block" : "none";
  
+=======
+
+    bodySection.style.display = ["POST", "PUT"].includes(method) ? "block" : "none";
+
+>>>>>>> 0202dce37193ab38a236ba377d87f3e4a7b7d170
     if (method === "POST") {
         endpointInput.value = "/tasks";
         endpointInput.disabled = true;
@@ -132,5 +197,9 @@ function toggleRequestBody() {
 }`;
     }
 }
+<<<<<<< HEAD
 window.onload = toggleRequestBody;
  
+=======
+window.onload = toggleRequestBody;
+>>>>>>> 0202dce37193ab38a236ba377d87f3e4a7b7d170
