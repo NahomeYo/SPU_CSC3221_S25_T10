@@ -15,7 +15,7 @@
             <label for="method">Request Method:</label>
             <select id="method" onchange="toggleRequestBody()">
                 <option value="GET">READ</option>
-                <option value="POST">CREAT</option>
+                <option value="POST">CREATE</option>
                 <option value="PUT">UPDATE</option>
                 <option value="DELETE">DELETE</option>
             </select>
@@ -24,24 +24,14 @@
             <label for="endpoint">Endpoint (e.g., /tasks or /tasks/123):</label>
             <input type="text" id="endpoint" placeholder="/tasks" />
 
-            <!-- Query -->
-            <label for="query">Query (optional):</label>
-            <input type="text" id="query" placeholder="?completed=true" />
-
             <!-- Request Body -->
             <div id="bodySection">
-                <label for="description">Task Description:</label>
-                <input type="text" id="description" placeholder='{
-  "itle": "Tasks Tetst",
+                <label for="description">Task Data (JSON or just title):</label>
+                <textarea id="description" rows="4" placeholder='{
+  "title": "Task Title",
   "completed": false
-}'/>
-
-    
-
-                <label>
-                    <input type="checkbox" id="completed" />
-                    Completed?
-                </label>
+}'></textarea>
+                <small>Or just type the task title</small>
             </div>
 
             <!-- Send -->
@@ -51,7 +41,7 @@
         <!-- SECTION: Response Display -->
         <div class="section">
             <h2>Response</h2>
-            <pre id="response"></pre>
+            <pre id="response">Waiting for request...</pre>
         </div>
     </div>
 
@@ -62,12 +52,10 @@
             const bodySection = document.getElementById("bodySection");
             const endpointInput = document.getElementById("endpoint");
 
-            if (method === "POST" || method === "PUT" || method === "PATCH") {
-                bodySection.style.display = "block";
-            } else {
-                bodySection.style.display = "none";
-            }
+            // Show body section for methods that need it
+            bodySection.style.display = ["POST", "PUT"].includes(method) ? "block" : "none";
 
+            // Set default endpoint for POST
             if (method === "POST") {
                 endpointInput.value = "/tasks";
                 endpointInput.disabled = true;
