@@ -69,14 +69,14 @@ class tasksServer {
     }
 }
 
-const api = new Client("http://localhost:3000");
+const api = new tasksServer("http://localhost:3000"); // ✅ Correct class name
 
 document.getElementById("send-btn").addEventListener("click", async (e) => {
     e.preventDefault();
     const method = document.getElementById("method").value;
     const endpoint = document.getElementById("endpoint").value;
     const query = document.getElementById("query").value;
-    const body = document.getElementById("body").value;
+    const body = document.getElementById("description").value;
 
     const result = await api.request(method, endpoint, query, body);
     document.getElementById("response").textContent = JSON.stringify(result, null, 2);

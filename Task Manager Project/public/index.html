@@ -15,9 +15,8 @@
             <label for="method">Request Method:</label>
             <select id="method" onchange="toggleRequestBody()">
                 <option value="GET">READ</option>
-                <option value="POST">ADD</option>
-                <option value="PUT">UPDATE (PUT)</option>
-                <option value="PATCH">MARK COMPLETE (PATCH)</option>
+                <option value="POST">CREAT</option>
+                <option value="PUT">UPDATE</option>
                 <option value="DELETE">DELETE</option>
             </select>
 
@@ -32,7 +31,12 @@
             <!-- Request Body -->
             <div id="bodySection">
                 <label for="description">Task Description:</label>
-                <input type="text" id="description" placeholder="e.g., Finish homework" />
+                <input type="text" id="description" placeholder='{
+  "itle": "Tasks Tetst",
+  "completed": false
+}'/>
+
+    
 
                 <label>
                     <input type="checkbox" id="completed" />

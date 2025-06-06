@@ -21,14 +21,16 @@ app.use(express.static(path.join(__dirname, 'public')));
 const Task = require('./models/task');
 
 // Routes
-app.get('/tasks', async (req, res) => {
+app.get("/tasks/:id", async (req, res) => {
     try {
-        const tasks = await Task.find();
-        res.json(tasks);
-    } catch (error) {
-        res.status(500).json({ error: 'Failed to fetch tasks' });
+        const task = await Task.findById(req.params.id);
+        if (!task) return res.status(404).json({ error: "Task not found" });
+        res.json(task);
+    } catch (err) {
+        res.status(500).json({ error: "Failed to fetch task" });
     }
 });
+
 
 app.post('/tasks', async (req, res) => {
     try {
