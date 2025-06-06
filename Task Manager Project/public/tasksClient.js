@@ -1,205 +1,217 @@
-class Client {
-    constructor(baseUrl) {
-        this.baseUrl = baseUrl;
+const express = require('express');
+const mongoose = require('mongoose');
+const path = require('path');
+const cors = require('cors');
+ 
+const app = express();
+const port = 3000;
+ 
+// MongoDB connection
+mongoose.connect('mongodb+srv://Team10:1234@cluster0.pdc2xzl.mongodb.net/TM-T10?retryWrites=true&w=majority', {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+})
+.then(() => console.log('Connected to MongoDB Atlas'))
+.catch(err => console.error('MongoDB connection error:', err));
+ 
+// Middleware
+app.use(cors());
+app.use(express.json());
+app.use(express.static(path.join(__dirname, 'public')));
+ 
+// Mongoose model
+const Task = require('./models/task');
+ 
+// Routes
+ 
+// GET all tasks
+app.get("/tasks", async (req, res) => {
+    try {
+        const tasks = await Task.find().sort({ createdAt: -1 }); // Sort by newest first
+        res.json({
+            success: true,
+            count: tasks.length,
+            data: tasks
+        });
+    } catch (err) {
+        console.error("Error fetching tasks:", err);
+        res.status(500).json({
+            success: false,
+            error: "Failed to fetch tasks",
+            message: err.message
+        });
     }
-<<<<<<< HEAD
- 
-=======
-
->>>>>>> 0202dce37193ab38a236ba377d87f3e4a7b7d170
-    async request(method, endpoint, query = "", body = null) { // body will come from description textarea
-        try {
-            // Ensure endpoint starts with a slash
-            endpoint = endpoint.startsWith("/") ? endpoint : `/${endpoint}`;
-            const expectedEndpointPrefix = "/tasks"; // Define this once
-<<<<<<< HEAD
- 
-=======
-
->>>>>>> 0202dce37193ab38a236ba377d87f3e4a7b7d170
-            // Add /tasks prefix if it's just an ID or a direct "tasks" input for specific methods
-            if (!endpoint.startsWith(expectedEndpointPrefix) && (endpoint.length === 24 || endpoint === "tasks")) {
-                endpoint = `${expectedEndpointPrefix}/${endpoint}`;
-            } else if (!endpoint.startsWith(expectedEndpointPrefix) && endpoint.length > 0) {
-                endpoint = `${expectedEndpointPrefix}/${endpoint}`;
-            }
-<<<<<<< HEAD
- 
- 
-=======
-
-
->>>>>>> 0202dce37193ab38a236ba377d87f3e4a7b7d170
-            query = query && !query.startsWith("?") ? `?${query}` : query;
-            const url = `${this.baseUrl}${endpoint}${query}`;
- 
-            const options = {
-                method,
-                headers: {
-                    "Content-Type": "application/json"
-                },
-            };
-<<<<<<< HEAD
- 
-            // Declare parsedBody here, outside the conditional block
-            let parsedBody = null; // Initialize to null
- 
-=======
-
-            // Declare parsedBody here, outside the conditional block
-            let parsedBody = null; // Initialize to null
-
->>>>>>> 0202dce37193ab38a236ba377d87f3e4a7b7d170
-            if (["POST", "PUT"].includes(method)) {
-                if (body && body.trim()) { // Only try to parse if body content exists
-                    try {
-                        parsedBody = JSON.parse(body);
-                    } catch (e) {
-                        // If JSON.parse fails, assume it's a title string for task creation/update
-                        parsedBody = { title: body };
-                    }
-                    options.body = JSON.stringify(parsedBody);
-                } else if (method === "POST") {
-                    // For POST, body is usually required unless you have a default on server
-                    throw new Error("POST request requires a non-empty body.");
-<<<<<<< HEAD
-                }
-                // If it's a PUT with an empty body but a query, that's handled correctly later.
-            }
- 
-            // Now parsedBody is guaranteed to be declared (even if null) when accessed here
-            if (method === "POST") {
-                if (endpoint !== expectedEndpointPrefix) {
-                    throw new Error(`POST requires the tasks endpoint (e.g., ${expectedEndpointPrefix})`);
-                }
- 
-=======
-                }
-                // If it's a PUT with an empty body but a query, that's handled correctly later.
-            }
-
-            // Now parsedBody is guaranteed to be declared (even if null) when accessed here
-            if (method === "POST") {
-                if (endpoint !== expectedEndpointPrefix) {
-                    throw new Error(`POST requires the tasks endpoint (e.g., ${expectedEndpointPrefix})`);
-                }
-
->>>>>>> 0202dce37193ab38a236ba377d87f3e4a7b7d170
-                if (parsedBody && parsedBody.id) { // This check now works correctly
-                    throw new Error("POST no longer needs ID, remove it. Server will handle it");
-                }
-            }
-<<<<<<< HEAD
- 
-=======
-
->>>>>>> 0202dce37193ab38a236ba377d87f3e4a7b7d170
-            // The PATCH check should align with your server's PUT logic if you use PUT
-            // Your server has app.put('/tasks/:id', ...)
-            // So if your HTML sends PUT, this block won't run as it's checking for PATCH
-            // If you want to use the 'PATCH' method and its checks:
-            // 1. Change <option value="PUT">UPDATE</option> to <option value="PATCH">UPDATE</option> in index.html
-            // 2. Change app.put('/tasks/:id') to app.patch('/tasks/:id') in server.js
-            // For now, I'm keeping the check as PATCH, but note the mismatch.
-            if (method === "PATCH" && !endpoint.startsWith(expectedEndpointPrefix + "/")) {
-                throw new Error(`PATCH requires a specific task ID (e.g., ${expectedEndpointPrefix}/<ID>)`);
-            }
-<<<<<<< HEAD
- 
-            console.log(`Sending ${method} request to: ${url}`); // Debugging line
-            console.log('Request options:', options); // Debugging line
- 
- 
-=======
-
-            console.log(`Sending ${method} request to: ${url}`); // Debugging line
-            console.log('Request options:', options); // Debugging line
-
-
->>>>>>> 0202dce37193ab38a236ba377d87f3e4a7b7d170
-            const response = await fetch(url, options);
- 
-            if (response.status === 404) {
-                const errorData = await response.json().catch(() => ({}));
-                throw new Error(`Resource not found: ${errorData.message || errorData.error || response.statusText}. Check endpoint and ID.`);
-            }
- 
-            if (!response.ok) {
-                const errorData = await response.json().catch(() => ({}));
-                throw new Error(`HTTP ${response.status}: ${errorData.message || errorData.error || response.statusText}`);
-            }
- 
-            return response.status === 204 ? {} : await response.json();
- 
-        } catch (error) {
-            console.error("API Request Failed:", error);
-            return {
-                error: "API Request Failed.",
-<<<<<<< HEAD
-                message: `${error.message} â€” Hint: Make sure the server is running, the endpoint is correct (e.g., /tasks or /tasks/ID), and check your request body format.`,
-=======
-                message: `${error.message} — Hint: Make sure the server is running, the endpoint is correct (e.g., /tasks or /tasks/ID), and check your request body format.`,
->>>>>>> 0202dce37193ab38a236ba377d87f3e4a7b7d170
-            };
-        }
-    }
-}
-<<<<<<< HEAD
- 
-const api = new Client("http://localhost:3000");
- 
-=======
-
-const api = new Client("http://localhost:3000");
-
->>>>>>> 0202dce37193ab38a236ba377d87f3e4a7b7d170
-document.getElementById("send-btn").addEventListener("click", async (e) => {
-    e.preventDefault();
-    const method = document.getElementById("method").value;
-    const endpoint = document.getElementById("endpoint").value;
-    const query = document.getElementById("query") ? document.getElementById("query").value : "";
-    const body = document.getElementById("description").value;
- 
-    const result = await api.request(method, endpoint, query, body);
-    document.getElementById("response").textContent = JSON.stringify(result, null, 2);
 });
-<<<<<<< HEAD
  
-=======
-
->>>>>>> 0202dce37193ab38a236ba377d87f3e4a7b7d170
-function toggleRequestBody() {
-    const method = document.getElementById("method").value;
-    const bodySection = document.getElementById("bodySection");
-    const endpointInput = document.getElementById("endpoint");
-    const descriptionTextarea = document.getElementById("description");
-<<<<<<< HEAD
+// GET specific task by ID
+app.get("/tasks/:id", async (req, res) => {
+    try {
+        // Validate the ID format first
+        if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+            return res.status(400).json({
+                success: false,
+                error: "Invalid task ID format",
+                message: "Task ID must be a valid MongoDB ObjectId (24 character hex string)"
+            });
+        }
  
-    bodySection.style.display = ["POST", "PUT"].includes(method) ? "block" : "none";
- 
-=======
-
-    bodySection.style.display = ["POST", "PUT"].includes(method) ? "block" : "none";
-
->>>>>>> 0202dce37193ab38a236ba377d87f3e4a7b7d170
-    if (method === "POST") {
-        endpointInput.value = "/tasks";
-        endpointInput.disabled = true;
-        descriptionTextarea.placeholder = `{
-  "title": "Task Title",
-  "completed": false
-}`;
-    } else {
-        endpointInput.disabled = false;
-        descriptionTextarea.placeholder = `{
-  "title": "Task Title",
-  "completed": false
-}`;
+        const task = await Task.findById(req.params.id);
+        if (!task) {
+            return res.status(404).json({
+                success: false,
+                error: "Task not found",
+                message: `No task found with ID: ${req.params.id}`
+            });
+        }
+        
+        res.json({
+            success: true,
+            data: task
+        });
+    } catch (err) {
+        console.error("Error fetching task:", err);
+        res.status(500).json({
+            success: false,
+            error: "Failed to fetch task",
+            message: err.message
+        });
     }
-}
-<<<<<<< HEAD
-window.onload = toggleRequestBody;
+});
  
-=======
-window.onload = toggleRequestBody;
->>>>>>> 0202dce37193ab38a236ba377d87f3e4a7b7d170
+// POST - Create new task
+app.post('/tasks', async (req, res) => {
+    try {
+        // Handle both JSON objects and simple strings
+        let taskData;
+        if (typeof req.body === 'string') {
+            taskData = { title: req.body };
+        } else {
+            taskData = req.body;
+        }
+ 
+        // Validate required fields
+        if (!taskData.title || taskData.title.trim() === '') {
+            return res.status(400).json({
+                success: false,
+                error: 'Validation failed',
+                message: 'Task title is required'
+            });
+        }
+ 
+        const task = new Task(taskData);
+        const savedTask = await task.save();
+        
+        res.status(201).json({
+            success: true,
+            message: 'Task created successfully',
+            data: savedTask
+        });
+    } catch (error) {
+        console.error("Error creating task:", error);
+        res.status(400).json({
+            success: false,
+            error: 'Failed to create task',
+            message: error.message
+        });
+    }
+});
+ 
+// PUT - Update task by ID
+app.put('/tasks/:id', async (req, res) => {
+    try {
+        // Validate the ID format first
+        if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+            return res.status(400).json({
+                success: false,
+                error: "Invalid task ID format",
+                message: "Task ID must be a valid MongoDB ObjectId"
+            });
+        }
+ 
+        const updates = req.body;
+ 
+        // Allow ?completed=true as a query override
+        if (req.query.completed !== undefined) {
+            updates.completed = req.query.completed === "true";
+        }
+ 
+        const task = await Task.findByIdAndUpdate(
+            req.params.id,
+            updates,
+            { new: true, runValidators: true }
+        );
+        
+        if (!task) {
+            return res.status(404).json({
+                success: false,
+                error: "Task not found",
+                message: `No task found with ID: ${req.params.id}`
+            });
+        }
+        
+        res.json({
+            success: true,
+            message: 'Task updated successfully',
+            data: task
+        });
+    } catch (error) {
+        console.error("Error updating task:", error);
+        res.status(400).json({
+            success: false,
+            error: 'Failed to update task',
+            message: error.message
+        });
+    }
+});
+ 
+// DELETE - Delete task by ID
+app.delete('/tasks/:id', async (req, res) => {
+    try {
+        // Validate the ID format first
+        if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+            return res.status(400).json({
+                success: false,
+                error: "Invalid task ID format",
+                message: "Task ID must be a valid MongoDB ObjectId"
+            });
+        }
+ 
+        const task = await Task.findByIdAndDelete(req.params.id);
+        
+        if (!task) {
+            return res.status(404).json({
+                success: false,
+                error: "Task not found",
+                message: `No task found with ID: ${req.params.id}`
+            });
+        }
+        
+        res.json({
+            success: true,
+            message: "Task deleted successfully",
+            data: task
+        });
+    } catch (error) {
+        console.error("Error deleting task:", error);
+        res.status(500).json({
+            success: false,
+            error: 'Failed to delete task',
+            message: error.message
+        });
+    }
+});
+ 
+// Health check endpoint
+app.get('/health', (req, res) => {
+    res.json({
+        success: true,
+        message: 'Server is running',
+        timestamp: new Date().toISOString()
+    });
+});
+ 
+// Start server
+app.listen(port, () => {
+    console.log(`Server running on http://localhost:${port}`);
+    console.log(`Health check: http://localhost:${port}/health`);
+});
